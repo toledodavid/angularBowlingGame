@@ -1,0 +1,34 @@
+.casillas{
+    border: solid 2px #474747; 
+    height: 80px; 
+    margin-top: 10px;
+}
+.fuente{
+    font-size: 22px;
+    font-weight: bold;
+}
+.recuadroTiro2{
+    border-left: solid 2px #474747;
+    border-bottom: solid 2px #474747;
+    height: 33px;
+}
+.recuadroTiro2Spare{
+    border-left: solid 2px #474747;
+    border-bottom: solid 2px #474747;
+    height: 33px;
+    background-image: linear-gradient(-18deg, #474747 50%, white 50%);
+}
+.contenedorBola{
+    font-size: 80px;
+    width: 90px;
+    margin: 0 auto;
+}
+.bola1{
+    color: #2469c4;
+}
+.bola2{
+    color: #811b1b;
+}
+i:hover{
+    cursor: pointer;
+}
