@@ -7,163 +7,117 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioComponent implements OnInit {
 
-  /*turnos:any = [];
-  turno:number = 0;
-  oportunidad1:boolean = true;
-  oportunidad2:boolean = false;
-  contadorChusas:number = 0;
-  totalPinos:number = 10;
-  pinosRestantes:number = 0;
-  puntosPorTurno:number = 0;*/
-
-
   lanzamiento1:boolean = true;
   lanzamiento2:boolean = false;
-  casilla:number = 1;
-  puntos:number = 0;
-  chusa:boolean = false;
+  frames:any = [];
+  frame:number = 1;
+  sumatoriaPuntos:number = 0;
+  contadorChusas:number = 0;
   spare:boolean = false;
-  casillas:any = [];
-  sumaPinosDerribadosPorCasilla:number = 0;
+  sumaPinosDerribadosPorFrame:number = 0;
 
-  constructor() { 
-    for(let casilla = 0;casilla < 10; casilla++){
-      if(casilla+1 != 10){
-        this.casillas.push({casilla: casilla+1, tiro1: '', tiro2: '', puntaje: ''});
+
+  constructor() {
+
+    for(let frame = 0;frame < 10; frame++){
+      if(frame+1 != 10){
+        this.frames.push({frame: frame+1, tiro1: '', tiro2: '', puntaje: ''});
       }else{
-        this.casillas.push({casilla: casilla+1, tiro1: '', tiro2: '', tiro3: '', puntaje: ''});
+        this.frames.push({frame: frame+1, tiro1: '', tiro2: '', tiro3: '', puntaje: ''});
       }
     }
-    console.log(this.casillas);
+    
   }
 
   ngOnInit() {
   }
 
-  /*jugar(){
-    if(this.oportunidad1){
-      let pinosDerribados:number = Math.floor(Math.random() * 11);
-      console.log("Tiro 1: ", pinosDerribados);
-
-      if(pinosDerribados == 10){
-        this.contadorChusas +=pinosDerribados;
-        console.log("CHUSA");
-      }else{
-        this.oportunidad1 = false;
-        this.oportunidad2 = true;
-
-        this.pinosRestantes = this.totalPinos - pinosDerribados;
-        console.log("Pinos restantes: ", this.pinosRestantes);
-        this.puntosPorTurno += pinosDerribados;
-      }
-    }else{
-
-      let pinosDerribados2:number = Math.floor(Math.random() * this.pinosRestantes+1);
-      console.log("tiro 2: ", pinosDerribados2);
-      if(pinosDerribados2 + this.pinosRestantes == 10){
-        console.log("Spare");
-      }else{
-        this.oportunidad1 = true;
-        this.oportunidad2 = false;
-        this.turno++;
-
-        this.puntosPorTurno += pinosDerribados2;
-        console.log(`Puntos en turno ${this.turno}: ${this.puntosPorTurno}`);
-      }
-
-    }
-  }*/
 
   primerLanzamiento(){
-    //Numero entero random del 0 al 10
-    let pinosDerribadosLanzamiento1:number = Math.floor(Math.random() * 11);
-    
-    /* Verificamos si en la casilla anterior se hizo un SPARE 
-        Si se hizo un SPARE, entonces a puntos le sumamos el valor de los pinos derribados en el primer lanzamiento 
-        y se lo agregamos al puntaje de la casilla anterior */
+    // Numero random del 0 al 10
+    let pinosDerribadosLanzamiento1 = Math.floor(Math.random() * 11);
+
+    /* Se verifica si en la casilla anterior se hizo un SPARE 
+        Si se hizo un SPARE, entonces a sumatoriaPuntos se le suma el valor de los pinos derribados en el primer lanzamiento 
+        y se agrega al puntaje del frame anterior */
     if(this.spare){
-      this.puntos += pinosDerribadosLanzamiento1;
-      this.casillas[this.casilla-2].puntaje = this.puntos;
+      this.sumatoriaPuntos += pinosDerribadosLanzamiento1;
+      this.frames[this.frame-2].puntaje = this.sumatoriaPuntos;
       this.spare = false;
     }
 
-    if(pinosDerribadosLanzamiento1 == 10){
-      // CHUSA
-      this.puntos += pinosDerribadosLanzamiento1;
 
-      /* Verificamos si la casilla anterior fue chusa 
-          Si fue chusa en la casilla anterior entonces en el puntaje de la casilla anterior le agregamos los 10 de su chusa más los 10 de la chusa de la casilla actual
-          y a puntos le sumamos la chusa actual para despues hacer la suma con los puntos de la siguiente casilla */
-      if(this.chusa){
-        this.casillas[this.casilla-2].puntaje = this.puntos;
-        this.puntos += pinosDerribadosLanzamiento1;
+    // Se verifica si se hizo chusa
+    if(pinosDerribadosLanzamiento1 == 10){
+      // Si es chusa, se le agrega el caracter X al tiro1 del frame actual y se aumenta el frame para ir al primer lanzamiento del siguiente
+      this.contadorChusas++;
+      this.frames[this.frame-1].tiro1 = 'X';
+      this.frame++;
+      if(this.contadorChusas == 3){
+        // Hay tres chusas consecutivas, asi que se hace la suma del la sumatoriaPuntos más los 30 puntos y se le agrega al puntaje del primer frame que hizo la chusa consecutiva
+        let puntos:number = this.sumatoriaPuntos += this.contadorChusas*10;
+        this.frames[this.frame-4].puntaje = puntos;
+        this.contadorChusas--;
+        puntos = 0;
+      }
+    }else{
+      // Se agrega la cantidad de pinos derribados en el tiro1 del frame actual
+      this.frames[this.frame-1].tiro1 = pinosDerribadosLanzamiento1;
+      this.sumaPinosDerribadosPorFrame += pinosDerribadosLanzamiento1;
+
+      /* se verifica si en los dos frames anteriores se hizo chusa consecutiva 
+        Si es verdad entonces a la sumatoria de puntos se le suman 20 de las dos chusas anteriores más los pinos derribados en el lanzamiento1 del frame actual,
+        y la sumatoria se le agrega al primer frame de las dos chusas consecutivas */
+      if(this.contadorChusas == 2){
+        this.sumatoriaPuntos += (this.contadorChusas*10) + pinosDerribadosLanzamiento1;
+        this.frames[this.frame-3].puntaje = this.sumatoriaPuntos;
+        this.contadorChusas--;
       }
 
-      this.chusa = true;
-      this.casillas[this.casilla-1].tiro1 = "X";
-      this.casilla++;
-    }else{
-      // Sino fue chusa el primer lanzamiento, entonces almacenamos los pinos derribados del lanzamiento 1
-      this.sumaPinosDerribadosPorCasilla = pinosDerribadosLanzamiento1;
-
-      // Activamos la bola 2 y desactivamos la bola 1
       this.lanzamiento1 = false;
       this.lanzamiento2 = true;
-
-      // Guardamos los pinos derribados del lanzamiento 1 en el objeto de la casilla actual
-      this.casillas[this.casilla-1].tiro1 = pinosDerribadosLanzamiento1;
     }
-
-    console.log(this.casillas);
-
+    
   }
 
   segundoLanzamiento(){
-    // Hacemos una resta de los pinos totales menos los pinos que se derribaron en el lanzamiento 1
-    let pinosRestantes:number = 10 - this.sumaPinosDerribadosPorCasilla;
+    // Se realiza una resta del total de pinos menos la cantidad de pinos que se derribaron en el lanzamiento1
+    let pinosRestantes:number = 10 - this.sumaPinosDerribadosPorFrame;
 
-    // Generamos un numero random entre 0 y los pinos que NO se derribaron en el lanzamiento 1
+    // Se genera un numero random entre 0 y los pinosRestantes
     let pinosDerribadosLanzamiento2:number = Math.floor(Math.random() * pinosRestantes+1);
 
-    // Almacenamos la suma de los pinos derribados en los dos lanzamientos
-    this.sumaPinosDerribadosPorCasilla += pinosDerribadosLanzamiento2;
+    // Se le agrega el valor de los pinos derribados en el lanzamiento 2 a la suma de puntos del frame actual
+    this.sumaPinosDerribadosPorFrame += pinosDerribadosLanzamiento2;
 
-    /* Verificamos si en la casilla anterior de hizo una chusa, 
-        Si se hizo una chusa en la casilla anterior, entonces a puntos le sumanos el valor de los dos lanzamientos 
-        y agregamos el valor de puntos a la clave puntaje del objeto de la casilla anterior */
-    if(this.chusa){
-      this.puntos += this.sumaPinosDerribadosPorCasilla;
-      this.casillas[this.casilla-2].puntaje = this.puntos;
+    // Si el anterior frame fue chusa, entonces se le agrega al puntaje del frame anterior la suma de los dos lanzamientos
+    if(this.contadorChusas == 1){
+      this.sumatoriaPuntos += (this.contadorChusas*10)+this.sumaPinosDerribadosPorFrame;
+      this.frames[this.frame-2].puntaje = this.sumatoriaPuntos;
+      this.contadorChusas--;
     }
 
-    // A puntos que trae el puntaje de la casilla anterior, le sumamos el valor de los dos lanzamientos
-    this.puntos += this.sumaPinosDerribadosPorCasilla;
+    this.sumatoriaPuntos += this.sumaPinosDerribadosPorFrame;
 
-    /* Verificamos si con el segundo lanzamiento se genera un SPARE, 
-        Si se genera un SPARE almacenamos la palabra spare en la clave tiro2 de la casilla actual 
-        Y activamos la variable spare que va a ayudar para la suma del lanzamiento 1 de la siguiente casilla */
-    if(this.sumaPinosDerribadosPorCasilla == 10){
+    if(this.sumaPinosDerribadosPorFrame == 10){
       // SPARE
-      this.casillas[this.casilla-1].tiro2 = "spare";
       this.spare = true;
+      this.frames[this.frame-1].tiro2 = 'spare';
     }else{
-      /* Si no se genera un SPARE, entonces solo se guarda el valor el lanzamiento 2 y el puntaje, 
-      el cual contiene la suma de los dos lanzamientos más el puntaje de la casilla anterior */
-      this.casillas[this.casilla-1].tiro2 = pinosDerribadosLanzamiento2;
-      this.casillas[this.casilla-1].puntaje = this.puntos;
+      this.frames[this.frame-1].tiro2 = pinosDerribadosLanzamiento2;
+      this.frames[this.frame-1].puntaje = this.sumatoriaPuntos;
     }
 
-    // Volvemos a inicializar a 0 la variable que nos ayuda a llevar la suma de los pinos derribados en los dos lanzamientos por casilla
-    this.sumaPinosDerribadosPorCasilla = 0;
+    this.frame++;
+    this.sumaPinosDerribadosPorFrame = 0;
 
-    // Pasamos a la siguiente casilla, activamos la bola 1 y desactivamos la bola 2
-    this.casilla++;
-    this.chusa = false;
-    this.lanzamiento2 = false;
-    this.lanzamiento1 = true;
-
-
-    console.log(this.casillas);
+    if(this.frame == 11){
+      this.lanzamiento1 = false;
+      this.lanzamiento2 = false;
+    }else{
+      this.lanzamiento1 = true;
+      this.lanzamiento2 = false;
+    }
   }
 
 }

@@ -1,38 +1,36 @@
 
+<section class="inicio">
 
-<div class="container py-5">
-    <div class="row">
-        <div class="col-3 col-md-2 text-center casillas" *ngFor="let item of casillas; let i = index">
-            <div class="row">
-                <div class="col fuente">{{item.tiro1}}</div>
-                <div class="col fuente recuadroTiro2" *ngIf="item.tiro2 != 'spare'">{{item.tiro2}}</div>
-                <div class="col fuente recuadroTiro2Spare" *ngIf="item.tiro2 == 'spare'"></div>
-                <div class="col fuente recuadroTiro2" *ngIf="i == 9">{{item.tiro3}}</div>
-            </div>
-            <div class="row py-1">
-                <div class="col fuente">{{item.puntaje}}</div>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-3 col-md-2 text-center casillas" *ngFor="let item of frames; let i = index">
+                <div class="row">
+                    <div class="col fuente">{{item.tiro1}}</div>
+                    <div class="col fuente recuadroTiro2" *ngIf="item.tiro2 != 'spare'">{{item.tiro2}}</div>
+                    <div class="col fuente recuadroTiro2Spare" *ngIf="item.tiro2 == 'spare'"></div>
+                    <div class="col fuente recuadroTiro2" *ngIf="i == 9">{{item.tiro3}}</div>
+                </div>
+                <div class="row py-1">
+                    <div class="col fuente">{{item.puntaje}}</div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
-
-<!--div class="container text-center">
-    <button type="button" class="btn btn-lg" *ngIf="lanzamiento1" (click)="primerLanzamiento()" style="font-size: 70px; border-radius:50%;"><i class="fas fa-bowling-ball" style="color: #2469c4"></i></button>
-    <button type="button" class="btn btn-lg" *ngIf="lanzamiento2" (click)="segundoLanzamiento()" style="font-size: 70px; border-radius:50%;"><i class="fas fa-bowling-ball" style="color: #811b1b"></i></button>
-</div-->
-
-<div class="container text-center">
-    <div *ngIf="lanzamiento1" class="contenedorBola"><i class="fas fa-bowling-ball bola1" (click)="primerLanzamiento()"></i></div>
-    <label *ngIf="lanzamiento1">Bola 1</label>
-    <div *ngIf="lanzamiento2" class="contenedorBola"><i class="fas fa-bowling-ball bola2" (click)="segundoLanzamiento()"></i></div>
-    <label *ngIf="lanzamiento2">Bola 2</label>
-</div>
-
-
-<div class="container py-2">
-    <div class="alert alert-info text-center" role="alert">
-        ¡Haz click sobre la bola para hacer el lanzamiento!
+        
+        
+        
+    <div class="container text-center my-5">
+        <div *ngIf="lanzamiento1" class="contenedorBola"><i class="fas fa-bowling-ball bola1" (click)="primerLanzamiento()"></i></div>
+        <label *ngIf="lanzamiento1">Bola 1</label>
+        <div *ngIf="lanzamiento2" class="contenedorBola"><i class="fas fa-bowling-ball bola2" (click)="segundoLanzamiento()"></i></div>
+        <label *ngIf="lanzamiento2">Bola 2</label>
     </div>
-</div>
+    
+    
+    <div class="container py-2">
+        <div class="alert alert-info text-center" role="alert">
+            ¡Haz click sobre la bola para hacer el lanzamiento!
+        </div>
+    </div>
+
+</section>
