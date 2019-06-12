@@ -7,6 +7,7 @@
     border: solid 2px #474747; 
     height: 80px; 
     margin-top: 10px;
+    border-radius: 4px;
 }
 .fuente{
     font-size: 22px;

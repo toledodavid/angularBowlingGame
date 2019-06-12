@@ -34,6 +34,7 @@ export class InicioComponent implements OnInit {
 
 
   primerLanzamiento(){
+    console.log(this.frame);
     // Numero random del 0 al 10
     let pinosDerribadosLanzamiento1 = Math.floor(Math.random() * 11);
 
@@ -41,6 +42,10 @@ export class InicioComponent implements OnInit {
         Si se hizo un SPARE, entonces a sumatoriaPuntos se le suma el valor de los pinos derribados en el primer lanzamiento 
         y se agrega al puntaje del frame anterior */
     if(this.spare){
+      // Se asigna el valor a tiro3 de los pinos derribados si hay un tercer lanzamiento en el frame 10
+      if(this.frame == 11){
+        this.frames[this.frame-2].tiro3 = pinosDerribadosLanzamiento1;
+      }
       this.sumatoriaPuntos += pinosDerribadosLanzamiento1;
       this.frames[this.frame-2].puntaje = this.sumatoriaPuntos;
       this.spare = false;
@@ -51,7 +56,22 @@ export class InicioComponent implements OnInit {
     if(pinosDerribadosLanzamiento1 == 10){
       // Si es chusa, se le agrega el caracter X al tiro1 del frame actual y se aumenta el frame para ir al primer lanzamiento del siguiente
       this.contadorChusas++;
-      this.frames[this.frame-1].tiro1 = 'X';
+
+      // Validacion para cuando se hace chusa en el frame 10 y en sus dos lanzamientos siguientes, se le asigna la X al respectivo tiro realizado
+      switch (this.frame) {
+        case 11:
+          this.frames[this.frame-2].tiro2 = 'X';
+          break;
+        case 12:
+          this.frames[this.frame-3].tiro3 = 'X';
+          this.lanzamiento1 = false;
+          this.lanzamiento2 = false;
+          break;
+      
+        default:
+          this.frames[this.frame-1].tiro1 = 'X';
+          break;
+      }
       this.frame++;
       if(this.contadorChusas == 3){
         // Hay tres chusas consecutivas, asi que se hace la suma del la sumatoriaPuntos más los 30 puntos y se le agrega al puntaje del primer frame que hizo la chusa consecutiva
@@ -61,9 +81,18 @@ export class InicioComponent implements OnInit {
         puntos = 0;
       }
     }else{
-      // Se agrega la cantidad de pinos derribados en el tiro1 del frame actual
-      this.frames[this.frame-1].tiro1 = pinosDerribadosLanzamiento1;
-      this.sumaPinosDerribadosPorFrame += pinosDerribadosLanzamiento1;
+      // Se agrega la cantidad de pinos derribados en el tiro1 del frame actual, siempre y cuando exista, sino terminamos el juego
+      if(this.frame != 11){
+        this.frames[this.frame-1].tiro1 = pinosDerribadosLanzamiento1;
+        this.sumaPinosDerribadosPorFrame += pinosDerribadosLanzamiento1;
+
+        this.lanzamiento1 = false;
+        this.lanzamiento2 = true;
+      }else{
+        this.lanzamiento1 = false;
+        this.lanzamiento2 = false;
+      }
+      
 
       /* se verifica si en los dos frames anteriores se hizo chusa consecutiva 
         Si es verdad entonces a la sumatoria de puntos se le suman 20 de las dos chusas anteriores más los pinos derribados en el lanzamiento1 del frame actual,
@@ -74,8 +103,8 @@ export class InicioComponent implements OnInit {
         this.contadorChusas--;
       }
 
-      this.lanzamiento1 = false;
-      this.lanzamiento2 = true;
+      /*this.lanzamiento1 = false;
+      this.lanzamiento2 = true;*/
     }
     
   }
@@ -111,7 +140,8 @@ export class InicioComponent implements OnInit {
     this.frame++;
     this.sumaPinosDerribadosPorFrame = 0;
 
-    if(this.frame == 11){
+    // Se verifica si en el frame 10 no se hizo un spare, sino se hizo entonces terminamos el juego
+    if(this.frame == 11 && !this.spare){
       this.lanzamiento1 = false;
       this.lanzamiento2 = false;
     }else{
