@@ -21,18 +21,17 @@
         
     <div class="container text-center my-5">
         <div *ngIf="lanzamiento1" class="contenedorBola"><i class="fas fa-bowling-ball bola1" (click)="primerLanzamiento()"></i></div>
-        <label *ngIf="lanzamiento1">Bola 1</label>
         <div *ngIf="lanzamiento2" class="contenedorBola"><i class="fas fa-bowling-ball bola2" (click)="segundoLanzamiento()"></i></div>
-        <label *ngIf="lanzamiento2">Bola 2</label>
     </div>
     
     
     <div class="container py-2">
         <div class="row justify-content-center">
-            <div class="col-12 col-md-4">
-                <div class="alert alert-primary text-center" role="alert">
+            <div class="col-12 col-md-4 text-center">
+                <div class="alert alert-primary text-center" role="alert" *ngIf="lanzamiento1 || lanzamiento2">
                     ¡Haz click sobre la bola para hacer el lanzamiento!
                 </div>
+                <button class="btn btn-primary" *ngIf="!lanzamiento1 && !lanzamiento2" (click)="actualizarPagina()">Volver a jugar</button>
             </div>
         </div>
     </div>

@@ -34,7 +34,6 @@ export class InicioComponent implements OnInit {
 
 
   primerLanzamiento(){
-    console.log(this.frame);
     // Numero random del 0 al 10
     let pinosDerribadosLanzamiento1 = Math.floor(Math.random() * 11);
 
@@ -148,6 +147,11 @@ export class InicioComponent implements OnInit {
       this.lanzamiento1 = true;
       this.lanzamiento2 = false;
     }
+  }
+
+
+  actualizarPagina(){
+    location.reload();
   }
 
 }

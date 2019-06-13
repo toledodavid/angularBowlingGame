@@ -32,8 +32,14 @@
 .bola1{
     color: #095fcf;
 }
+.bola1:hover{
+    color: #0955b9;
+}
 .bola2{
-    color: #811b1b;
+    color: #8f1e1e;
+}
+.bola2:hover{
+    color: #751919;
 }
 i:hover{
     cursor: pointer;
