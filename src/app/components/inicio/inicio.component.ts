@@ -88,8 +88,16 @@ export class InicioComponent implements OnInit {
         this.lanzamiento1 = false;
         this.lanzamiento2 = true;
       }else{
-        this.lanzamiento1 = false;
-        this.lanzamiento2 = false;
+        if(this.contadorChusas == 1){
+          this.frames[this.frame-2].tiro2 = pinosDerribadosLanzamiento1;
+          this.sumaPinosDerribadosPorFrame += pinosDerribadosLanzamiento1;
+          this.lanzamiento1 = false;
+          this.lanzamiento2 = true;
+        }else{
+          this.lanzamiento1 = false;
+          this.lanzamiento2 = false;
+        }
+        
       }
       
 
@@ -102,8 +110,7 @@ export class InicioComponent implements OnInit {
         this.contadorChusas--;
       }
 
-      /*this.lanzamiento1 = false;
-      this.lanzamiento2 = true;*/
+      
     }
     
   }
